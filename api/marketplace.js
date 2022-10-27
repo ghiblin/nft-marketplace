@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
+import axios from "axios";
 
 import { marketplaceAddress } from "../config";
 
@@ -26,25 +27,25 @@ async function getSigner() {
 async function getContract(readonly = false) {
   // if (readonly) {
   // create a generic provider and query for unsold market items
-  const provider = new ethers.providers.JsonRpcProvider();
-  // retrieve the deployed contract
-  const contract = new ethers.Contract(
-    marketplaceAddress,
-    NFTMarketplace.abi,
-    provider
-  );
-
-  return contract;
-  // }
-
-  // const signer = await getSigner();
+  // const provider = new ethers.providers.JsonRpcProvider();
+  // // retrieve the deployed contract
   // const contract = new ethers.Contract(
   //   marketplaceAddress,
   //   NFTMarketplace.abi,
-  //   signer
+  //   provider
   // );
 
   // return contract;
+  // }
+
+  const signer = await getSigner();
+  const contract = new ethers.Contract(
+    marketplaceAddress,
+    NFTMarketplace.abi,
+    signer
+  );
+
+  return contract;
 }
 
 export async function getMetadata(tokenURI) {

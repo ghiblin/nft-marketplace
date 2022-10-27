@@ -36,11 +36,16 @@ export default function Home() {
   }, [reload]);
 
   async function buyNft(nft) {
-    // call Marketplace contract function
-    await buyNFT(nft);
+    try {
+      // call Marketplace contract function
+      await buyNFT(nft);
 
-    // force NFT array to reload
-    setReload(reload + 1);
+      // force NFT array to reload
+      setReload(reload + 1);
+    } catch (error) {
+      // TODO: Notify user in case of error
+      console.error("Failed to buy NFT:", error);
+    }
   }
 
   if (loadingState === LoadingStates.Loaded && !nfts.length)

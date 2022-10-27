@@ -1,2 +1,1 @@
-export const marketplaceAddress = "";
-export const nftAddress = "";
+export const marketplaceAddress = "0x.....";

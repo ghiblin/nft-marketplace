@@ -28,12 +28,16 @@ export default function CreateItem() {
   }
 
   async function listNFTForSale() {
-    const { name, description, price } = formInput;
-    const url = await uploadMetadataToIPFS(name, description, fileUrl);
-    await createToken(url, price);
+    try {
+      const { name, description, price } = formInput;
+      const url = await uploadMetadataToIPFS(name, description, fileUrl);
+      await createToken(url, price);
 
-    // NFT created => redirect to homepage
-    router.push("/");
+      // NFT created => redirect to homepage
+      router.push("/");
+    } catch (error) {
+      console.error("Failed to list NFT for sale:", error);
+    }
   }
 
   return (

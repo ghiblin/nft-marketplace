@@ -29,10 +29,15 @@ export default function ResellNFT() {
   }, [tokenURI]);
 
   async function listNFTForSale() {
-    await resellToken(id, price);
+    try {
+      await resellToken(id, price);
 
-    // redirect user to homepage
-    router.push("/");
+      // redirect user to homepage
+      router.push("/");
+    } catch (error) {
+      // TODO: notify the user about this error
+      console.error("Failed to resell token:", error);
+    }
   }
 
   return (
