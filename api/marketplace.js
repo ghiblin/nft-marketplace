@@ -7,6 +7,23 @@ import { marketplaceAddress } from "../config";
 import NFTMarketplace from "../build/contracts/NFTMarketplace.json";
 
 /**
+ * @typedef {Object} MarkeItem
+ * @property {number} tokenId
+ * @property {string} seller
+ * @property {string} owner
+ * @property {boolean} sold
+ *
+ * @typedef {Object} NFT
+ * @property {string} price
+ * @property {number} tokenId
+ * @property {string} seller
+ * @property {string} owner
+ * @property {string} image
+ * @property {string} name
+ * @property {string} description
+ */
+
+/**
  * Utility: retrieve signer from ehters provider
  *
  * @returns {Promise<ethers.providers.JsonRpcSigner>} signer
@@ -24,20 +41,7 @@ async function getSigner() {
  *
  * @returns {Promise<ethers.Contract>} marketplace contract
  */
-async function getContract(readonly = false) {
-  // if (readonly) {
-  // create a generic provider and query for unsold market items
-  // const provider = new ethers.providers.JsonRpcProvider();
-  // // retrieve the deployed contract
-  // const contract = new ethers.Contract(
-  //   marketplaceAddress,
-  //   NFTMarketplace.abi,
-  //   provider
-  // );
-
-  // return contract;
-  // }
-
+async function getContract() {
   const signer = await getSigner();
   const contract = new ethers.Contract(
     marketplaceAddress,
@@ -48,6 +52,12 @@ async function getContract(readonly = false) {
   return contract;
 }
 
+/**
+ * Fetch Metadata for the NFT.
+ *
+ * @param {string} tokenURI
+ * @returns {Promise<Object>} Metadata
+ */
 export async function getMetadata(tokenURI) {
   if (!tokenURI) return;
   const meta = await axios.get(tokenURI);
@@ -55,6 +65,12 @@ export async function getMetadata(tokenURI) {
   return meta.data;
 }
 
+/**
+ * Utitlity function: return NFT object from
+ * @param {Array<MarkeItem>} data
+ * @param {ethers.Contract} contract
+ * @returns {Promise<NFT>} nfts
+ */
 async function itemsToNFTs(data, contract) {
   const items = await Promise.all(
     data.map(async (i) => {
@@ -91,8 +107,13 @@ async function itemsToNFTs(data, contract) {
   return items.filter((item) => item !== null);
 }
 
+/**
+ * Retrieve all NFT available on the Marketplace.
+ *
+ * @returns {Promise<NFT[]>}
+ */
 export async function loadNFTs() {
-  const contract = await getContract(true);
+  const contract = await getContract();
 
   // call fetchMaketItems on deployed contract
   const data = await contract.fetchMarketItems();
@@ -103,8 +124,13 @@ export async function loadNFTs() {
   return nfts;
 }
 
+/**
+ * Retrieve all NFT owned by the user.
+ *
+ * @returns {Promise<NFT[]>}
+ */
 export async function loadMyNfts() {
-  const contract = await getContract(true);
+  const contract = await getContract();
 
   // call fetchMyNFTs on deployed contract
   const data = await contract.fetchMyNFTs();
@@ -115,8 +141,13 @@ export async function loadMyNfts() {
   return nfts;
 }
 
+/**
+ * Retrieve all NFT listed.
+ *
+ * @returns {Promise<NFT[]>}
+ */
 export async function loadListedNfts() {
-  const contract = await getContract(true);
+  const contract = await getContract();
 
   // call fetchItemsListed on deployed contract
   const data = await contract.fetchItemsListed();
@@ -127,6 +158,12 @@ export async function loadListedNfts() {
   return nfts;
 }
 
+/**
+ * Allow the user to buy an NFT.
+ *
+ * @param {NFT} nft
+ * @returns {Promise<void>}
+ */
 export async function buyNFT(nft) {
   const contract = await getContract();
 
@@ -138,6 +175,13 @@ export async function buyNFT(nft) {
   await transaction.wait();
 }
 
+/**
+ * Create a new NFT.
+ *
+ * @param {string} tokenURI
+ * @param {string|number} price
+ * @returns {Promise<void>}
+ */
 export async function createToken(tokenURI, price) {
   const contract = await getContract();
 
@@ -156,6 +200,13 @@ export async function createToken(tokenURI, price) {
   await transaction.wait();
 }
 
+/**
+ * Resell an NFT.
+ *
+ * @param {number} id - NFT tokenId
+ * @param {string|number} price - new price for the NFT
+ * @returns {Promise<void>}
+ */
 export async function resellToken(id, price) {
   if (!price) return;
 
