@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { loadMyNfts } from "../../api/marketplace";
+import Grid from "../../components/grid";
 import NFTCard from "../../components/nft-card";
 import { LoadingStates } from "../../utils";
 
@@ -33,33 +34,29 @@ export default function MyNFTS() {
   }, []);
 
   function listNFT(nft) {
-    console.log("listNFT:", nft);
     router.push(`/resell-nft?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`);
   }
 
-  if (loadingState === LoadingStates.Loaded && !nfts.length)
+  if (loadingState === LoadingStates.Loaded && !nfts.length) {
     return <h1 className="py-10 px-20 text-3xl">No NFTs owned</h1>;
+  }
   return (
-    <div className="flex justify-center">
-      <div className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft) => (
-            <NFTCard
-              key={nft.tokenId}
-              image={nft.image}
-              name={nft.name}
-              action={
-                <button
-                  className="mt-4 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-                  onClick={() => listNFT(nft)}
-                >
-                  List
-                </button>
-              }
-            />
-          ))}
-        </div>
-      </div>
-    </div>
+    <Grid>
+      {nfts.map((nft) => (
+        <NFTCard
+          key={nft.tokenId}
+          image={nft.image}
+          name={nft.name}
+          action={
+            <button
+              className="mt-4 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
+              onClick={() => listNFT(nft)}
+            >
+              List
+            </button>
+          }
+        />
+      ))}
+    </Grid>
   );
 }

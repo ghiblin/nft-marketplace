@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { buyNFT, loadNFTs } from "../api/marketplace";
+import Grid from "../components/grid";
 import NFTCard from "../components/nft-card";
 import { LoadingStates } from "../utils";
 
@@ -53,26 +54,22 @@ export default function Home() {
     return <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>;
 
   return (
-    <div className="flex justify-center">
-      <div className="px-4" style={{ maxWidth: "1600px" }}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft) => (
-            <NFTCard
-              key={nft.tokenId}
-              {...nft}
-              onBuy={() => buyNFT(nft)}
-              action={
-                <button
-                  className="mt-4 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-                  onClick={() => buyNFT(nft)}
-                >
-                  List
-                </button>
-              }
-            />
-          ))}
-        </div>
-      </div>
-    </div>
+    <Grid>
+      {nfts.map((nft) => (
+        <NFTCard
+          key={nft.tokenId}
+          {...nft}
+          onBuy={() => buyNFT(nft)}
+          action={
+            <button
+              className="mt-4 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
+              onClick={() => buyNFT(nft)}
+            >
+              List
+            </button>
+          }
+        />
+      ))}
+    </Grid>
   );
 }

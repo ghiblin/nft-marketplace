@@ -1,7 +1,11 @@
 export default function NFTCard({ image, name, description, price, action }) {
   return (
     <div className="border shadow rounded-xl overflow-hidden">
-      <img src={image} data-testid="nft-image" />
+      <img
+        src={image}
+        className="w-full object-cover"
+        data-testid="nft-image"
+      />
       <div className="p-4">
         <p style={{ height: "64px" }} className="text-2xl font-semibold">
           {name}
