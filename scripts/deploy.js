@@ -6,7 +6,7 @@ async function main(cb) {
     const marketplace = await Marketplace.deployed();
 
     fs.writeFileSync(
-      "./config.js",
+      "./src/config.js",
       `
     export const marketplaceAddress = "${marketplace.address}"
     `
