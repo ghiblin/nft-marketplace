@@ -1,34 +1,86 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Simple NFT Marketplace
 
-## Getting Started
+This is a small DApp project that show you how to setup a small Marketplace to create and sell NFTs. To implement it, I used:
 
-First, run the development server:
+- [Solidity](https://docs.soliditylang.org/en/v0.8.14/): the principal language used to develop Smart Contracts
+- [Open Zeppelin](https://www.openzeppelin.com/): a battle-tested suite to develop your Smart Contracts
+- [Truffle Suite](https://trufflesuite.com/): a suite of tools for Smart Contract development
+- [Ganache](https://trufflesuite.com/ganache/): a local personal Blockchain used to deploy and test your Smart Contracts
+- [Infura](https://infura.io/): the Web3 backend Infrastructure-as-a-Service that allow your to interact with multiple blockchains and IPFS
+- [NextJS](https://nextjs.org/): a ReactJS-based framework that allows your quickly develop web applications
+- and much more.
+
+## Before to begin
+
+You will need an Infura account to uplaod NFT images and Metadata to IPFS. As the Infura IPFS public gateway was deprecated on August 10, 2022 and is no longer accessible, you need to use [dedicated gateways](https://docs.infura.io/infura/networks/ipfs/how-to/access-ipfs-content/dedicated-gateways) and that requires you enter a Credit Card in your profile, but don't worry: Infura give you a 5GB free IPFS storage, quite enough to start and experiment with your project.
+
+## Disclaimer
+
+This project is not _production ready_, and it uses your Project ID and your API Secret in order to upload images and metadata on IPFS through `ipfs-http-client` from the end user's browser (check `./src/api/ipfs.js`), so that secret will be in the final bundle (if you don't trust me, try to build your project with `npm run build` and look for your API secret).
+
+If you want a more secure solution, you can create an API endpoint in order to call Infura IPFS API and not reveal your secrets.
+
+## Setup the project
+
+### 1. Installation
+
+Start by cloning this repo:
 
 ```bash
-npm run dev
-# or
-yarn dev
+  git clone https://github.com/ghiblin/nft-marketplace.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Go to the project directory
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+  cd nft-marketplace
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Install dependencies
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```bash
+  npm install
+```
 
-## Learn More
+### 2. Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+If you don't already have one, create an Infura account follow the instruction in the [official documentation](https://docs.infura.io/infura/getting-started) and create a new IPFS project.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Setup your .env file:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```
+INFURA_IPFS_PROJECT_ID=<your Infura IPFS Project ID>
+INFURA_IPFS_API_SECRET=<your Infura IPFS API Secret>
+INFURA_IPFS_SUBDOMAIN=<Your subdomani>
+```
 
-## Deploy on Vercel
+### 3. Run the project
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Before to run any code, you need to compile the Smart Contracts and deploy it on your Ganache client.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Run your Ganache client:
+
+```bash
+  ganache
+```
+
+Compile and deploy the Smart Contracts:
+
+```bash
+  npm run deploy
+```
+
+Start your development environment:
+
+```bash
+  npm run dev
+```
+
+Pay attention: this command will start a Ganache instance, so you can:
+
+- stop your previous instance
+- start only the frontend through:
+
+```bash
+  npm run dev:next
+```
