@@ -2,9 +2,9 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import axios from "axios";
 
-import { marketplaceAddress } from "../config";
+import { marketplaceAddress } from "../../config";
 
-import NFTMarketplace from "../build/contracts/NFTMarketplace.json";
+import NFTMarketplace from "../contracts/NFTMarketplace.json";
 
 /**
  * @typedef {Object} MarkeItem
@@ -76,9 +76,9 @@ async function itemsToNFTs(data, contract) {
     data.map(async (i) => {
       try {
         // retrieve tokenURI for the NFT
-        const tokenUri = await contract.tokenURI(i.tokenId);
+        const tokenURI = await contract.tokenURI(i.tokenId);
         // retrieve metadata
-        const meta = await getMetadata(tokenUri);
+        const meta = await getMetadata(tokenURI);
 
         // convert price to ether
         let price = ethers.utils.formatUnits(i.price.toString(), "ether");
@@ -92,6 +92,7 @@ async function itemsToNFTs(data, contract) {
           image: meta.image,
           name: meta.name,
           description: meta.description,
+          tokenURI,
         };
         return item;
       } catch (error) {

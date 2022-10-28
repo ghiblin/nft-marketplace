@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { buyNFT, loadNFTs } from "../api/marketplace";
+import NFTCard from "../components/nft-card";
 import { LoadingStates } from "../utils";
 
 export default function Home() {
@@ -55,31 +56,20 @@ export default function Home() {
     <div className="flex justify-center">
       <div className="px-4" style={{ maxWidth: "1600px" }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft, i) => (
-            <div key={i} className="border shadow rounded-xl overflow-hidden">
-              <img src={nft.image} data-testid="nft-image" />
-              <div className="p-4">
-                <p
-                  style={{ height: "64px" }}
-                  className="text-2xl font-semibold"
-                >
-                  {nft.name}
-                </p>
-                <div style={{ height: "70px", overflow: "hidden" }}>
-                  <p className="text-gray-400">{nft.description}</p>
-                </div>
-              </div>
-              <div className="p-4 bg-black">
-                <p className="text-2xl font-bold text-white">{nft.price} ETH</p>
+          {nfts.map((nft) => (
+            <NFTCard
+              key={nft.tokenId}
+              {...nft}
+              onBuy={() => buyNFT(nft)}
+              action={
                 <button
                   className="mt-4 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-                  data-testid="buy-button"
-                  onClick={() => buyNft(nft)}
+                  onClick={() => buyNFT(nft)}
                 >
-                  Buy
+                  List
                 </button>
-              </div>
-            </div>
+              }
+            />
           ))}
         </div>
       </div>

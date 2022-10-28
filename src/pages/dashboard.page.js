@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadListedNfts } from "../api/marketplace";
+import NFTCard from "../components/nft-card";
 import { LoadingStates } from "../utils";
 
 export default function Dashboard() {
@@ -30,22 +31,21 @@ export default function Dashboard() {
     };
   }, []);
 
-  if (loadingState === LoadingStates.Loaded && !nfts.length)
+  if (loadingState === LoadingStates.Loaded && !nfts.length) {
     return <h1 className="py-10 px-20 text-3xl">No NFTs listed</h1>;
+  }
   return (
     <div>
       <div className="p-4">
         <h2 className="text-2xl py-2">Items Listed</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft, i) => (
-            <div key={i} className="border shadow rounded-xl overflow-hidden">
-              <img src={nft.image} className="rounded" />
-              <div className="p-4 bg-black">
-                <p className="text-2xl font-bold text-white">
-                  Price - {nft.price} Eth
-                </p>
-              </div>
-            </div>
+          {nfts.map((nft) => (
+            <NFTCard
+              key={nft.tokenId}
+              image={nft.image}
+              name={nft.name}
+              price={`Price - ${nft.price}`}
+            />
           ))}
         </div>
       </div>
