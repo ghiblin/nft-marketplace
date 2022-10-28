@@ -1,4 +1,9 @@
-import { render, waitFor } from "@testing-library/react";
+import {
+  render,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { generateTestingUtils } from "eth-testing";
 import { BigNumber, utils } from "ethers";
 
@@ -12,6 +17,13 @@ function getItems(address) {
   return [
     {
       tokenId: BigNumber.from("1"),
+      seller: OWNER,
+      owner: address,
+      sold: false,
+      price: utils.parseUnits("1"),
+    },
+    {
+      tokenId: BigNumber.from("2"),
       seller: OWNER,
       owner: address,
       sold: false,
@@ -68,23 +80,51 @@ describe("Home", () => {
   });
 
   describe("when there is NFT on the market", () => {
-    it("should list all the NFTs", async () => {
+    beforeEach(() => {
       marketplaceTestingUtils.address = CONTRACT_ADDRESS;
       const items = getItems(CONTRACT_ADDRESS);
       // Setup
       marketplaceTestingUtils
         .mockCall("fetchMarketItems", [items])
         // https://ipfs.infura.io/token-hash map to a MSW handler URL
-        .mockCall("tokenURI", ["https://ipfs.infura.io/token-hash"]);
+        .mockCall("tokenURI", ["https://ipfs.infura.io/ipfs/nft-1"], {
+          callValues: [1],
+        })
+        .mockCall("tokenURI", ["https://ipfs.infura.io/ipfs/nft-2"], {
+          callValues: [2],
+        });
+    });
 
+    it("should list all the NFTs", async () => {
       // Act
       const screen = render(<Home />);
 
       await waitFor(() => {
         // name, description and image are coming from MSW mocked API
-        expect(screen.getByText("Mocked NFT")).toBeInTheDocument();
-        expect(screen.getByText("This is a Mocked NFT")).toBeInTheDocument();
-        expect(screen.getByTestId("nft-image")).toBeInTheDocument();
+        expect(screen.getByText("Mocked NFT 1")).toBeInTheDocument();
+        expect(screen.getByText("This is a Mocked NFT 1")).toBeInTheDocument();
+        expect(screen.getByText("Mocked NFT 2")).toBeInTheDocument();
+        expect(screen.getByText("This is a Mocked NFT 2")).toBeInTheDocument();
+        expect(screen.getAllByTestId("nft-image").length).toBe(2);
+        expect(screen.getAllByTestId("buy-button").length).toBe(2);
+      });
+    });
+
+    it("should allow a user to buy an NFT", async () => {
+      marketplaceTestingUtils.mockTransaction("createMarketSale", undefined, {
+        triggerCallback: () => {
+          const [_bought, ...items] = getItems(CONTRACT_ADDRESS);
+          marketplaceTestingUtils.mockCall("fetchMarketItems", [items]);
+        },
+      });
+      const screen = render(<Home />);
+
+      await waitFor(async () => {
+        const [buyBtn] = screen.getAllByTestId("buy-button");
+        userEvent.click(buyBtn);
+
+        await waitForElementToBeRemoved(buyBtn);
+        expect(screen.queryByText("Mocked NFT 1")).not.toBeInTheDocument();
       });
     });
   });
