@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getMetadata, resellToken } from "../api/marketplace";
+import { getMetadata, resellToken } from "../../api/marketplace";
 
 export default function ResellNFT() {
   const [formInput, updateFormInput] = useState({ price: "", image: "" });

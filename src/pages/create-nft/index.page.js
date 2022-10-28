@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import { uploadMetadataToIPFS } from "../api/ipfs";
-import { createToken } from "../api/marketplace";
-import NFTForm from "../components/nft-form";
+import { uploadMetadataToIPFS } from "../../api/ipfs";
+import { createToken } from "../../api/marketplace";
+import NFTForm from "../../components/nft-form";
 
 export default function CreateItem() {
   const router = useRouter();
