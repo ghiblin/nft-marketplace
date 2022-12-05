@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev:next": "next dev",
-    "dev:ganache": "ganache",
+    "dev:ganache": "ganache --db='./data/save'",
     "dev": "run-p dev:*",
     "build": "next build",
     "start": "next start",
