@@ -33,11 +33,11 @@ export default function Home() {
 
     // invalidate api call
     return function () {
-      stale = false;
+      stale = true;
     };
   }, [reload]);
 
-  async function buyNft(nft) {
+  async function callBuyNft(nft) {
     try {
       // call Marketplace contract function
       await buyNFT(nft);
@@ -63,7 +63,7 @@ export default function Home() {
           action={
             <button
               className="mt-4 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-              onClick={() => buyNFT(nft)}
+              onClick={() => callBuyNft(nft)}
             >
               List
             </button>
