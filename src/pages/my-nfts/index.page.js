@@ -29,7 +29,7 @@ export default function MyNFTS() {
 
     // invalidate api call
     return function () {
-      stale = false;
+      stale = true;
     };
   }, []);
 

@@ -28,7 +28,7 @@ export default function Dashboard() {
 
     // invalidate api call
     return function () {
-      stale = false;
+      stale = true;
     };
   }, []);
 
