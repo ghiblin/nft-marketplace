@@ -30,6 +30,18 @@ export default function Navbar() {
     };
   }, []);
 
+  async function connect() {
+    if (!window.ethereum) return;
+
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const result = await provider.send("eth_requestAccounts", []);
+      console.log("Connect:", result);
+    } catch (err) {
+      console.error("Failed to connect:", err);
+    }
+  }
+
   return (
     <nav className="border-b p-6">
       <p className="text-4xl font-bold">Metaverse Marketplace</p>
@@ -47,7 +59,16 @@ export default function Navbar() {
           Dashboard
         </Link>
         <div className="ml-auto">
-          {accounts.length ? formatAddress(accounts[0]) : "not connected"}
+          {accounts.length ? (
+            formatAddress(accounts[0])
+          ) : (
+            <button
+              className="border border-pink-500 rounded-md p-2"
+              onClick={connect}
+            >
+              Connect
+            </button>
+          )}
         </div>
       </div>
     </nav>
