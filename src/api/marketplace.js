@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import axios from "axios";
 
-import { marketplaceAddress } from "../../config";
+import { marketplaceAddress } from "../config";
 
 import NFTMarketplace from "../contracts/NFTMarketplace.json";
 
