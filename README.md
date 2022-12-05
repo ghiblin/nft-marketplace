@@ -57,11 +57,12 @@ INFURA_IPFS_SUBDOMAIN=<Your subdomani>
 ### 3. Run the project
 
 Before to run any code, you need to compile the Smart Contracts and deploy it on your Ganache client.
+Using the `--db` flag allow you to store your ganache state locally, otherwise you need to redeploy the contract everytime.
 
 Run your Ganache client:
 
 ```bash
-  ganache
+  ganache --db="./data/save"
 ```
 
 Compile and deploy the Smart Contracts:

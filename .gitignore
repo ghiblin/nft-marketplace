@@ -37,4 +37,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-config.js
+src/config.js
+data/
